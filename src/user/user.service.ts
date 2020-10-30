@@ -22,9 +22,8 @@ export class UserService {
     return await this.usersRepository.findOne({nom});
   }
 
-   async test(Liste : any){
-  
-    return  await  Promise.all( Liste.split(',').map(async (idNom) => await this.usersRepository.findOne({idNom})));
+  async findUserQuery(users : string){
+    return  await  Promise.all( users.split(',').map(async (idNom) => await this.usersRepository.findOne({idNom})));
 
   }
 

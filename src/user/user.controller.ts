@@ -1,4 +1,4 @@
-import { Controller, Get, Query, HttpStatus, Post, Body  } from '@nestjs/common';
+import { Controller, Get, Query, HttpStatus, Post, Body, Delete, Param  } from '@nestjs/common';
 import { UserDTO } from './user.dto';
 import { User } from './user.entity';
 import { UserService } from './user.service';
@@ -10,18 +10,22 @@ export class UserController {
     constructor(readonly userService:UserService){}
 
     @Get()
-    findAll(@Query() query): any {
-        console.log(query.identifiant);
-      return this.userService.findByNameFirstName("wan");
+    async findAll() {
+      const result = await this.userService.findAll();
+      const response = result.map((value:User)=>new UserDTO(value));
+        return {
+            statusCode: HttpStatus.OK,
+            data:  response
+          };
     }
 
     @Get("/ListUser")
-    async findTest(@Query() query) {
-       const s =  await this.userService.test(query.identifiants) ;
-       const res = s.map((value:User)=>new UserDTO(value));
+    async findUserQuery(@Query() query) {
+       const result =  await this.userService.findUserQuery(query.identifiants) ;
+       const response = result.map((value:User)=>new UserDTO(value));
         return {
             statusCode: HttpStatus.OK,
-            data:  res
+            data:  response
           };
      
     }
@@ -35,5 +39,10 @@ export class UserController {
         
             return new UserDTO(user);
         
+   }
+
+   @Delete("/removeUser/:id")
+   async delete(@Param("id") id: string){
+    await this.userService.remove(id);
    }
 }
