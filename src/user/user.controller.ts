@@ -33,7 +33,7 @@ export class UserController {
 	@ApiQuery({ name: 'identifiant' })
 	@Get("/ListUser")
 	async findTest(@Query() query) {
-		const s = await this.userService.test(query.identifiants);
+		const s = await this.userService.findUserQuery(query.identifiants);
 		const res = s.map((value: User) => new UserDTO(value));
 		return {
 			statusCode: HttpStatus.OK,
